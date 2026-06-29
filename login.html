@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MagicWorldMC | Staff Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="stars-bg"></div>
+<div class="sparkle-container" id="sparkles"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">✨ MagicWorldMC</div>
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  <div class="nav-links" id="menu">
+    <a href="index.html">Home</a>
+    <a href="bezoeken.html">Bezoeken</a>
+    <a href="downloads.html">Downloads</a>
+    <a href="ranks.html">🎥 Media Rank</a>
+    <a href="regels.html">Regels</a>
+    <a href="login.html" class="nav-login active">🔐 Staff Login</a>
+  </div>
+</nav>
+
+<!-- LOGIN WRAPPER -->
+<div class="login-page-wrapper">
+  <div class="login-box">
+
+    <div style="font-size: 40px; margin-bottom: 16px;">🔐</div>
+    <h2>Staff Login</h2>
+    <p>Toegang voor geautoriseerde medewerkers van MagicWorldMC</p>
+
+    <div id="login-alert" class="alert" style="display:none;"></div>
+
+    <div class="form-group" style="text-align:left;">
+      <label>E-mailadres</label>
+      <input type="email" id="email" placeholder="staff@magicworldmc.nl" autocomplete="email">
+    </div>
+
+    <div class="form-group" style="text-align:left;">
+      <label>Wachtwoord</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <button class="btn btn-primary" id="login-btn" onclick="doLogin()" style="width:100%; justify-content:center; margin-top: 8px;">
+      Inloggen
+    </button>
+
+    <p style="margin-top: 24px; font-size: 12px; color: var(--text-dim);">
+      Geen toegang? Neem contact op via
+      <a href="https://discord.gg/GzgAQgMwMc" target="_blank" style="color: var(--gold);">Discord</a>
+    </p>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC7ncs5g0eZzGtUymIsDaBGaVUoxWL23Mo",
+  authDomain: "magicworldmc-de515.firebaseapp.com",
+  projectId: "magicworldmc-de515",
+  storageBucket: "magicworldmc-de515.firebasestorage.app",
+  messagingSenderId: "32771602846",
+  appId: "1:32771602846:web:edef1ef87aaabb986dbe8f",
+  measurementId: "G-YKS1C9HYZE"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.doLogin = async function() {
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn      = document.getElementById('login-btn');
+  const alert    = document.getElementById('login-alert');
+
+  if (!email || !password) {
+    showAlert('Vul je e-mailadres en wachtwoord in.', 'error');
+    return;
+  }
+
+  btn.innerHTML = '<span class="spinner"></span> Bezig...';
+  btn.disabled = true;
+  alert.style.display = 'none';
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    showAlert('✓ Ingelogd! Je wordt doorgestuurd...', 'success');
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+  } catch (err) {
+    let msg = 'Login mislukt. Controleer je gegevens.';
+    if (err.code === 'auth/user-not-found')   msg = 'Geen account gevonden met dit e-mailadres.';
+    if (err.code === 'auth/wrong-password')   msg = 'Wachtwoord is onjuist.';
+    if (err.code === 'auth/invalid-email')    msg = 'Ongeldig e-mailadres.';
+    if (err.code === 'auth/too-many-requests') msg = 'Te veel pogingen. Probeer later opnieuw.';
+    showAlert('✗ ' + msg, 'error');
+    btn.innerHTML = 'Inloggen';
+    btn.disabled = false;
+  }
+};
+
+function showAlert(msg, type) {
+  const el = document.getElementById('login-alert');
+  el.textContent = msg;
+  el.className = 'alert ' + type;
+  el.style.display = 'block';
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+</script>
+
+<script>
+function toggleMenu() {
+  document.getElementById('menu').classList.toggle('active');
+}
+
+(function() {
+  const c = document.getElementById('sparkles');
+  for (let i = 0; i < 8; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    const sz = Math.random() * 5 + 2;
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;animation-duration:${Math.random()*10+7}s;animation-delay:${Math.random()*6}s;`;
+    c.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

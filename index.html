@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MagicWorldMC | Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="stars-bg"></div>
+
+<!-- Sparkles -->
+<div class="sparkle-container" id="sparkles"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">✨ MagicWorldMC</div>
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  <div class="nav-links" id="menu">
+    <a href="index.html" class="active">Home</a>
+    <a href="bezoeken.html">Bezoeken</a>
+    <a href="downloads.html">Downloads</a>
+    <a href="ranks.html">🎥 Media Rank</a>
+    <a href="regels.html">Regels</a>
+    <a href="blogs.html">Blogs</a>
+    <a href="vacatures.html">Vacatures</a>
+    <a href="team.html">Ons Team</a>
+    <a href="login.html" class="nav-login">🔐 Staff Login</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <img src="Ontwerp_zonder_titel__31_.jpg" alt="MagicWorldMC Logo" class="hero-logo" onerror="this.style.display='none'">
+
+  <div class="server-badge">
+    <div class="dot"></div>
+    Server: <span class="ip">play.magicworldmc.nl</span>
+  </div>
+
+  <h1>Welkom bij MagicWorldMC</h1>
+  <p>Stap binnen in een magische wereld vol avontuur, attracties en fantasy. Een Minecraft server geïnspireerd op de magie van Disney.</p>
+
+  <div class="hero-btns">
+    <a href="bezoeken.html" class="btn btn-primary">🎮 Join de Server</a>
+    <a href="https://discord.gg/GzgAQgMwMc" target="_blank" class="btn btn-outline">💬 Discord ↗</a>
+    <a href="ranks.html" class="btn btn-outline">🎥 Media Rank</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES SECTION -->
+<section class="section">
+  <p class="section-title">Wat maakt ons magisch?</p>
+  <p class="section-sub">Alles wat je nodig hebt voor een onvergetelijke beleving</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🏰</div>
+      <h3>Magische Wereld</h3>
+      <p>Ontdek prachtig gebouwde attracties, kastelen en themagebieden geïnspireerd op klassieke sprookjes.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎢</div>
+      <h3>Unieke Attracties</h3>
+      <p>Beleef spannende achtbanen, interactieve quests en speciale events die regelmatig worden bijgewerkt.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h3>Actieve Community</h3>
+      <p>Word deel van een gezellige en actieve community vol gelijkgestemde Minecraft-spelers.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎥</div>
+      <h3>Media Rank</h3>
+      <p>Ben jij content creator? Vraag de officiële Media Rank aan en krijg speciale voordelen op de server.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⭐</div>
+      <h3>Staff Team</h3>
+      <p>Ons toegewijde staffteam staat altijd klaar om je te helpen en de server draaiend te houden.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎆</div>
+      <h3>Regelmatige Events</h3>
+      <p>Speciale seizoensgebonden events, prijzen en exclusieve content voor de meest actieve spelers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DISCORD CTA -->
+<div class="divider"></div>
+<section class="section" style="text-align:center; padding-top: 64px; padding-bottom: 80px;">
+  <p class="section-title">Word deel van de magie</p>
+  <p class="section-sub">Sluit je aan bij onze Discord voor nieuws, updates en speciale aankondigingen</p>
+  <a href="https://discord.gg/GzgAQgMwMc" target="_blank" class="btn btn-primary" style="font-size:15px; padding: 16px 36px;">
+    💬 Join onze Discord
+  </a>
+</section>
+
+<footer>
+  <p>© 2026 MagicWorldMC &nbsp;·&nbsp; <a href="login.html">Staff Login</a> &nbsp;·&nbsp; <a href="https://discord.gg/GzgAQgMwMc" target="_blank">Discord</a></p>
+</footer>
+
+<script>
+function toggleMenu() {
+  document.getElementById('menu').classList.toggle('active');
+}
+
+// Sparkle generator
+(function() {
+  const container = document.getElementById('sparkles');
+  for (let i = 0; i < 12; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    const size = Math.random() * 6 + 2;
+    s.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      left: ${Math.random() * 100}%;
+      animation-duration: ${Math.random() * 12 + 8}s;
+      animation-delay: ${Math.random() * 8}s;
+    `;
+    container.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

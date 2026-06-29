@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MagicWorldMC | Regels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+  .rules-section {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 36px 40px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+  }
+
+  .rules-section:hover {
+    border-color: rgba(212,175,55,0.35);
+    box-shadow: 0 8px 32px rgba(212,175,55,0.07);
+  }
+
+  .rules-section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rules-section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--glass-border), transparent);
+  }
+
+  .rule-item {
+    display: flex;
+    gap: 18px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    align-items: flex-start;
+  }
+
+  .rule-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .rule-item:first-child {
+    padding-top: 0;
+  }
+
+  .rule-num {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+    background: var(--gold-dim);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .rule-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.7;
+    font-weight: 300;
+    padding-top: 5px;
+  }
+
+  .rule-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .welcome-box {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(212,175,55,0.07), rgba(212,175,55,0.02));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 48px 40px;
+    margin-bottom: 32px;
+  }
+
+  .welcome-box p {
+    color: var(--text-dim);
+    max-width: 620px;
+    margin: 0 auto;
+    font-size: 15px;
+    line-height: 1.9;
+    font-weight: 300;
+  }
+
+  .measures-box {
+    background: rgba(212,175,55,0.05);
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: var(--radius);
+    padding: 32px 40px;
+    margin-bottom: 24px;
+  }
+
+  .measures-box h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  .measures-box p {
+    color: var(--text-dim);
+    font-size: 14px;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  .sign-off {
+    text-align: center;
+    padding: 40px 24px;
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(212,175,55,0.4);
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 600px) {
+    .rules-section { padding: 24px 20px; }
+    .welcome-box   { padding: 32px 20px; }
+    .measures-box  { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars-bg"></div>
+<div class="sparkle-container" id="sparkles"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">✨ MagicWorldMC</div>
+  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  <div class="nav-links" id="menu">
+    <a href="index.html">Home</a>
+    <a href="bezoeken.html">Bezoeken</a>
+    <a href="downloads.html">Downloads</a>
+    <a href="ranks.html">🎥 Media Rank</a>
+    <a href="regels.html" class="active">Regels</a>
+    <a href="blogs.html">Blogs</a>
+    <a href="vacatures.html">Vacatures</a>
+    <a href="team.html">Ons Team</a>
+    <a href="login.html" class="nav-login">🔐 Staff Login</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <h1>📜 Regels</h1>
+  <p>Om ervoor te zorgen dat iedereen een leuke en veilige ervaring heeft, vragen we alle spelers zich aan de onderstaande regels te houden.</p>
+</div>
+
+<!-- CONTENT -->
+<div class="section" style="padding-top: 0; max-width: 860px;">
+
+  <!-- Welkom -->
+  <div class="welcome-box">
+    <div style="font-size: 40px; margin-bottom: 16px;">🏰</div>
+    <div style="font-family:'Cinzel Decorative',serif; font-size: 18px; color: var(--gold); margin-bottom: 16px;">Welkom op MagicWorldMC</div>
+    <p>Welkom op MagicWorldMC, dé Minecraft Disney-server waar magie en avontuur centraal staan. Om ervoor te zorgen dat iedereen een leuke en veilige ervaring heeft, vragen we alle spelers zich aan de onderstaande regels te houden.</p>
+  </div>
+
+  <!-- Algemene Regels -->
+  <div class="rules-section">
+    <div class="rules-section-title">⚔️ Algemene Regels</div>
+
+    <div class="rule-item">
+      <div class="rule-num">1</div>
+      <div class="rule-text">Behandel alle spelers en staffleden met <strong>respect</strong>.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">2</div>
+      <div class="rule-text"><strong>Pesten, discriminatie, haatdragend gedrag</strong> en intimidatie zijn niet toegestaan.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">3</div>
+      <div class="rule-text"><strong>Spam</strong>, overmatig gebruik van hoofdletters (caps) en het verstoren van de chat zijn verboden.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">4</div>
+      <div class="rule-text"><strong>Reclame</strong> maken voor andere servers, communities of diensten is alleen toegestaan met toestemming van het staffteam.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">5</div>
+      <div class="rule-text">Het gebruik van <strong>hacks, cheats, scripts, macro's</strong> of andere oneerlijke hulpmiddelen is verboden.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">6</div>
+      <div class="rule-text"><strong>Griefen, stelen</strong> of het opzettelijk beschadigen van builds is niet toegestaan.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">7</div>
+      <div class="rule-text">Volg altijd de <strong>aanwijzingen van het staffteam</strong> op.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">8</div>
+      <div class="rule-text">Misbruik van <strong>bugs, glitches of exploits</strong> om voordeel te behalen is verboden.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">9</div>
+      <div class="rule-text">Ontdek je een bug? <strong>Meld deze zo snel mogelijk</strong> bij het staffteam.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">10</div>
+      <div class="rule-text">Ongepaste, beledigende of <strong>NSFW-content</strong> is niet toegestaan.</div>
+    </div>
+  </div>
+
+  <!-- Community Regels -->
+  <div class="rules-section">
+    <div class="rules-section-title">🌟 Community Regels</div>
+
+    <div class="rule-item">
+      <div class="rule-num">1</div>
+      <div class="rule-text">Gebruik de <strong>juiste kanalen</strong> voor je berichten.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">2</div>
+      <div class="rule-text">Maak gebruik van het <strong>ticketsysteem</strong> voor vragen, hulp of meldingen.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">3</div>
+      <div class="rule-text"><strong>Scammen, oplichten</strong> of misleiden van andere spelers is verboden.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">4</div>
+      <div class="rule-text">Respecteer de <strong>creaties en eigendommen</strong> van andere spelers.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">5</div>
+      <div class="rule-text">Overmatig taggen of onnodig gebruik van <strong>mentions</strong> is niet toegestaan.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">6</div>
+      <div class="rule-text"><strong>Gebruikersnamen, skins en profielen</strong> mogen geen ongepaste of aanstootgevende inhoud bevatten.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">7</div>
+      <div class="rule-text">Houd gesprekken <strong>vriendelijk, rustig</strong> en zoveel mogelijk on-topic.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">8</div>
+      <div class="rule-text">Het uitlokken van <strong>ruzies, drama of conflicten</strong> is niet toegestaan.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">9</div>
+      <div class="rule-text">Het gebruiken van <strong>alternatieve accounts</strong> om regels of straffen te omzeilen is verboden.</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-num">10</div>
+      <div class="rule-text">Heb <strong>plezier</strong>, respecteer elkaar en geniet van alle magie die MagicWorldMC te bieden heeft! ✨</div>
+    </div>
+  </div>
+
+  <!-- Maatregelen -->
+  <div class="measures-box">
+    <h2>⚖️ Maatregelen</h2>
+    <p>Het staffteam behoudt zich het recht voor om waarschuwingen, tijdelijke straffen of permanente bans uit te delen wanneer deze regels worden overtreden. De zwaarte van de straf is afhankelijk van de ernst en herhaling van de overtreding.</p>
+  </div>
+
+  <!-- Sign off -->
+  <div class="sign-off">
+    ✨ Het MagicWorldMC Staff Team wenst je veel plezier op onze server! 🏰
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 MagicWorldMC &nbsp;·&nbsp; <a href="login.html">Staff Login</a> &nbsp;·&nbsp; <a href="https://discord.gg/GzgAQgMwMc" target="_blank">Discord</a></p>
+</footer>
+
+<script>
+function toggleMenu() {
+  document.getElementById('menu').classList.toggle('active');
+}
+
+(function() {
+  const c = document.getElementById('sparkles');
+  for (let i = 0; i < 8; i++) {
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    const sz = Math.random() * 5 + 2;
+    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;animation-duration:${Math.random()*10+8}s;animation-delay:${Math.random()*6}s;`;
+    c.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>
