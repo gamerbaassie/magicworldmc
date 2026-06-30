@@ -14,13 +14,22 @@
 <div class="stars-bg"></div>
 
 <!-- NAVBAR -->
-<nav class="navbar">
-  <div class="logo">✨ MagicWorldMC</div>
+<nav class="navbar staff-sidebar">
+  <div class="logo">✨ Staff Panel</div>
   <div class="menu-toggle" onclick="toggleMenu()">☰</div>
   <div class="nav-links" id="menu">
+    <div class="staff-profile">
+      <div class="staff-avatar">🛡️</div>
+      <div>
+        <div id="nav-user" class="staff-name">Staff</div>
+        <div id="nav-role" class="staff-role">Functie: laden...</div>
+      </div>
+    </div>
+    <a href="dashboard.html" class="active">📋 Media Rank Dashboard</a>
+    <a href="minecraft-console.html" >🖥️ Minecraft Console</a>
+    <a href="disney-audio.html" >🎵 Disney Audio</a>
     <a href="index.html">← Terug naar site</a>
-    <span id="nav-user" style="color: var(--text-dim); font-size:12px; padding: 6px 10px;"></span>
-    <button onclick="doLogout()" class="btn btn-outline" style="padding: 6px 16px; font-size:12px; cursor:pointer;">Uitloggen</button>
+    <button onclick="doLogout()" class="btn btn-outline staff-logout">Uitloggen</button>
   </div>
 </nav>
 
@@ -80,9 +89,15 @@
 </div>
 
 <script type="module">
-import { initializeApp }   from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { getFirestore, collection, getDocs, doc, updateDoc, orderBy, query } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+let auth = null;
+let db = null;
+let firestoreApi = null;
+let authApi = null;
+let authChecked = false;
+
+const LOCAL_KEY = 'mw_media_rank_aanvragen';
+const COLLECTION_NAME = 'media_rank_aanvragen';
+const COLLECTIONS = ['media_rank_aanvragen', 'mediaRankApplications', 'mediaRankAanvragen'];
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7ncs5g0eZzGtUymIsDaBGaVUoxWL23Mo",
@@ -94,42 +109,177 @@ const firebaseConfig = {
   measurementId: "G-YKS1C9HYZE"
 };
 
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
-
 let allApplications = [];
 let currentFilter = 'all';
+let onlineStatus = 'Online database verbinden...';
 
-// Auth guard
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    window.location.href = 'login.html';
-    return;
+function getStaffRole(email) {
+  const roles = {
+    // Pas hier makkelijk functies aan per staff e-mail.
+    'admin@magicworldmc.nl': 'Eigenaar',
+    'staff@magicworldmc.nl': 'Staff Team',
+    'media@magicworldmc.nl': 'Media Manager'
+  };
+  return roles[String(email || '').toLowerCase()] || 'Staff Team';
+}
+
+function importWithTimeout(url, ms = 6000) {
+  return Promise.race([
+    import(url),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase laden duurt te lang')), ms))
+  ]);
+}
+
+function setListMessage(message) {
+  document.getElementById('applications-list').innerHTML = `<div class="empty-state">${message}</div>`;
+}
+
+async function initFirebase() {
+  try {
+    const [{ initializeApp }, authModule, firestoreModule] = await Promise.all([
+      importWithTimeout('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+      importWithTimeout('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+      importWithTimeout('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+    ]);
+
+    const app = initializeApp(firebaseConfig);
+    authApi = authModule;
+    firestoreApi = firestoreModule;
+    auth = authModule.getAuth(app);
+    db = firestoreModule.getFirestore(app);
+
+    authModule.onAuthStateChanged(auth, user => {
+      authChecked = true;
+      if (!user) {
+        // Als iemand direct dashboard.html opent, terug naar login.
+        window.location.href = 'login.html';
+        return;
+      }
+
+      document.getElementById('nav-user').textContent = user.email || 'Staff';
+      document.getElementById('nav-role').textContent = 'Functie: ' + getStaffRole(user.email);
+      onlineStatus = 'Online aanvragen ophalen...';
+      loadApplications(true);
+    });
+
+    // Extra vangnet: als Auth callback niet komt, stop met spinner en toon lokale modus.
+    setTimeout(() => {
+      if (!authChecked) {
+        document.getElementById('nav-user').textContent = 'Lokale modus';
+        document.getElementById('nav-role').textContent = 'Functie: offline';
+        onlineStatus = 'Kon loginstatus niet controleren. Lokale aanvragen worden getoond.';
+        loadApplications(false);
+      }
+    }, 3500);
+  } catch (err) {
+    console.warn('Firebase kon niet starten:', err);
+    document.getElementById('nav-user').textContent = 'Lokale modus';
+    document.getElementById('nav-role').textContent = 'Functie: offline';
+    onlineStatus = 'Firebase kon niet laden. Lokale aanvragen worden getoond.';
+    loadApplications(false);
   }
-  document.getElementById('nav-user').textContent = user.email;
-  loadApplications();
-});
+}
+
+function readLocalApplications() {
+  try {
+    return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]').map(a => ({ ...a, source: a.source || 'local' }));
+  } catch (e) {
+    return [];
+  }
+}
+
+function writeLocalApplications(apps) {
+  const localOnly = apps.filter(a => String(a.id || '').startsWith('local-') || a.source === 'local');
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(localOnly));
+}
+
+function withTimeout(promise, ms, label) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} duurt te lang`)), ms))
+  ]);
+}
+
+async function loadOnlineApplications() {
+  if (!db || !firestoreApi) return { apps: [], errors: ['Firebase is niet verbonden.'] };
+
+  const tasks = COLLECTIONS.map(async collectionName => {
+    const snap = await withTimeout(
+      firestoreApi.getDocs(firestoreApi.collection(db, collectionName)),
+      5500,
+      collectionName
+    );
+    return snap.docs.map(d => ({ id: d.id, collectionName, source: 'firebase', ...d.data() }));
+  });
+
+  const settled = await Promise.allSettled(tasks);
+  const apps = [];
+  const errors = [];
+
+  settled.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      apps.push(...result.value);
+    } else {
+      errors.push(`${COLLECTIONS[index]}: ${result.reason.message}`);
+    }
+  });
+
+  return { apps, errors };
+}
 
 window.doLogout = async function() {
-  await signOut(auth);
+  if (auth && authApi) await authApi.signOut(auth);
   window.location.href = 'login.html';
 };
 
-window.loadApplications = async function() {
-  const list = document.getElementById('applications-list');
-  list.innerHTML = '<div class="empty-state"><span class="spinner"></span> Laden...</div>';
+window.loadApplications = async function(loadOnline = true) {
+  const localApps = readLocalApplications();
+  allApplications = [...localApps];
+  sortApplications();
+  updateStats();
+  renderApplications(loadOnline ? onlineStatus : '');
 
+  if (!loadOnline) return;
+
+  const refreshButton = document.querySelector('.dashboard-header button');
+  if (refreshButton) refreshButton.innerHTML = '<span class="spinner"></span> Vernieuwen...';
+
+  let warning = '';
   try {
-    const q    = query(collection(db, 'media_rank_aanvragen'), orderBy('datum', 'desc'));
-    const snap = await getDocs(q);
-    allApplications = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    updateStats();
-    renderApplications();
+    const { apps: onlineApps, errors } = await loadOnlineApplications();
+    mergeApplications(onlineApps, localApps);
+
+    if (onlineApps.length > 0) {
+      warning = '';
+    } else if (errors.length) {
+      warning = 'Online database kon niet gelezen worden. Controleer Firebase regels/Auth. Lokale aanvragen worden getoond.';
+      console.warn('Firebase leesfouten:', errors);
+    } else {
+      warning = '';
+    }
   } catch (err) {
-    list.innerHTML = `<div class="empty-state">⚠️ Fout bij laden: ${err.message}</div>`;
+    warning = 'Online aanvragen laden mislukt: ' + err.message;
   }
+
+  sortApplications();
+  updateStats();
+  renderApplications(warning);
+
+  if (refreshButton) refreshButton.innerHTML = '🔄 Vernieuwen';
 };
+
+function mergeApplications(onlineApps, localApps) {
+  const byKey = new Map();
+  [...onlineApps, ...localApps].forEach(app => {
+    const key = app.id || `${app.naam}-${app.minecraftnaam}-${app.aangemaaktOp || app.datum}`;
+    byKey.set(key, app);
+  });
+  allApplications = Array.from(byKey.values());
+}
+
+function sortApplications() {
+  allApplications.sort((a, b) => getTime(b.datum || b.aangemaaktOp) - getTime(a.datum || a.aangemaaktOp));
+}
 
 function updateStats() {
   const total    = allApplications.length;
@@ -142,44 +292,54 @@ function updateStats() {
   document.getElementById('stat-rejected').textContent = rejected;
 }
 
-function renderApplications() {
+function renderApplications(message = '') {
   const list = document.getElementById('applications-list');
   const data = currentFilter === 'all'
     ? allApplications
     : allApplications.filter(a => (a.status || 'pending') === currentFilter);
 
+  const note = message
+    ? `<div class="form-note" style="margin:16px 20px;">ℹ️ ${esc(message)}</div>`
+    : '';
+
   if (!data.length) {
-    list.innerHTML = '<div class="empty-state">📭 Geen aanvragen gevonden.</div>';
+    list.innerHTML = note + `
+      <div class="empty-state">
+        📭 Geen aanvragen gevonden.<br><br>
+        Als je net een formulier hebt ingevuld en dit blijft leeg, dan blokkeert Firebase waarschijnlijk schrijven/lezen.<br>
+        Zet in Firebase Firestore de collectie <strong>${COLLECTION_NAME}</strong> open voor aangemelde staff, of gebruik dezelfde browser voor lokale test-aanvragen.
+      </div>`;
     return;
   }
 
-  list.innerHTML = data.map(app => {
+  list.innerHTML = note + data.map(app => {
     const status = app.status || 'pending';
-    const badgeClass = { pending: 'badge-pending', approved: 'badge-approved', rejected: 'badge-rejected' }[status];
-    const badgeLabel = { pending: '⏳ In behandeling', approved: '✓ Goedgekeurd', rejected: '✗ Afgewezen' }[status];
-    const date = app.datum?.toDate ? app.datum.toDate().toLocaleDateString('nl-NL') : (app.datum || '—');
+    const badgeClass = { pending: 'badge-pending', approved: 'badge-approved', rejected: 'badge-rejected' }[status] || 'badge-pending';
+    const badgeLabel = { pending: '⏳ In behandeling', approved: '✓ Goedgekeurd', rejected: '✗ Afgewezen' }[status] || '⏳ In behandeling';
+    const date = formatDate(app.datum || app.aangemaaktOp);
+    const sourceLabel = app.source === 'local' ? ' · lokaal' : '';
 
     return `
-    <div class="application-row" id="app-${app.id}">
+    <div class="application-row" id="app-${esc(app.id)}">
       <div class="app-row-top">
         <div>
-          <div class="app-name">${esc(app.naam)}</div>
-          <div class="app-mc">🎮 ${esc(app.minecraftnaam)} &nbsp;·&nbsp; Leeftijd: ${esc(app.leeftijd)}</div>
+          <div class="app-name">${esc(app.naam || 'Naam onbekend')}</div>
+          <div class="app-mc">🎮 ${esc(app.minecraftnaam || app.minecraftNaam || app.mc || '—')} &nbsp;·&nbsp; Leeftijd: ${esc(app.leeftijd || '—')}</div>
         </div>
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-          <div class="app-date">${date}</div>
+          <div class="app-date">${esc(date)}${sourceLabel}</div>
           <span class="badge ${badgeClass}">${badgeLabel}</span>
         </div>
       </div>
       <div class="app-row-meta">
         <div class="app-meta-item">Platform: <span class="app-platform">${esc(app.platform || app.socialmedia || '—')}</span></div>
-        <div class="app-meta-item">Kanaal: <span><a href="${esc(app.kanaallink || '#')}" target="_blank" style="color:var(--gold)">${esc(app.kanaallink || '—')}</a></span></div>
+        <div class="app-meta-item">Kanaal: <span><a href="${esc(app.kanaallink || app.kanaal || '#')}" target="_blank" style="color:var(--gold)">${esc(app.kanaallink || app.kanaal || '—')}</a></span></div>
       </div>
       ${app.motivatie ? `<div class="app-motivatie">💬 ${esc(app.motivatie)}</div>` : ''}
       <div class="app-actions">
-        ${status !== 'approved' ? `<button class="btn-sm btn-approve" onclick="updateStatus('${app.id}', 'approved')">✓ Goedkeuren</button>` : ''}
-        ${status !== 'rejected' ? `<button class="btn-sm btn-reject" onclick="updateStatus('${app.id}', 'rejected')">✗ Afwijzen</button>` : ''}
-        ${status !== 'pending' ? `<button class="btn-sm" style="border-color:var(--glass-border);color:var(--text-dim);background:transparent;" onclick="updateStatus('${app.id}', 'pending')">↩ Terug naar behandeling</button>` : ''}
+        ${status !== 'approved' ? `<button class="btn-sm btn-approve" onclick="updateStatus('${esc(app.id)}', 'approved')">✓ Goedkeuren</button>` : ''}
+        ${status !== 'rejected' ? `<button class="btn-sm btn-reject" onclick="updateStatus('${esc(app.id)}', 'rejected')">✗ Afwijzen</button>` : ''}
+        ${status !== 'pending' ? `<button class="btn-sm" style="border-color:var(--glass-border);color:var(--text-dim);background:transparent;" onclick="updateStatus('${esc(app.id)}', 'pending')">↩ Terug naar behandeling</button>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -193,21 +353,50 @@ window.setFilter = function(filter, btn) {
 };
 
 window.updateStatus = async function(id, status) {
-  try {
-    await updateDoc(doc(db, 'media_rank_aanvragen', id), { status });
-    const idx = allApplications.findIndex(a => a.id === id);
-    if (idx !== -1) allApplications[idx].status = status;
-    updateStats();
-    renderApplications();
-  } catch (err) {
-    alert('Fout bij bijwerken: ' + err.message);
+  const app = allApplications.find(a => String(a.id) === String(id));
+  if (!app) return;
+
+  app.status = status;
+
+  if (app.source === 'firebase' && db && firestoreApi) {
+    try {
+      await firestoreApi.updateDoc(firestoreApi.doc(db, app.collectionName || COLLECTION_NAME, id), { status });
+    } catch (err) {
+      alert('Online bijwerken mislukt, lokaal wel aangepast: ' + err.message);
+    }
   }
+
+  writeLocalApplications(allApplications);
+  updateStats();
+  renderApplications();
 };
 
-function esc(str) {
-  if (!str) return '';
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function getTime(value) {
+  if (!value) return 0;
+  if (value.toDate) return value.toDate().getTime();
+  if (typeof value === 'number') return value;
+  const parsed = Date.parse(value);
+  return Number.isNaN(parsed) ? 0 : parsed;
 }
+
+function formatDate(value) {
+  if (!value) return '—';
+  const date = value.toDate ? value.toDate() : new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleDateString('nl-NL') + ' ' + date.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+}
+
+function esc(str) {
+  if (str === undefined || str === null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+// Start pas nadat alle functies bestaan. Hierdoor blijft het dashboard niet vast op laden.
+window.addEventListener('DOMContentLoaded', () => {
+  window.loadApplications(false);
+  initFirebase();
+});
+
 </script>
 
 <script>
