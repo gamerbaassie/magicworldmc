@@ -1,18 +1,103 @@
 <!DOCTYPE html>
-<!-- saved from url=(0047)https://sites.google.com/view/magicworldmc/home -->
-<html lang="nl" itemscope="" itemtype="http://schema.org/WebPage"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./MagicWorldMC_files/cb=gapi.loaded_1" nonce="" async=""></script><script src="./MagicWorldMC_files/cb=gapi(1).loaded_0" nonce="" async=""></script><script nonce="">window['ppConfig'] = {productName: '6b8ce7c01e3dacd3d2c7a8cd322ff979', deleteIsEnforced:  false , sealIsEnforced:  false , heartbeatRate:  0.5 , periodicReportingRateMillis:  60000.0 , disableAllReporting:  false };(function(){'use strict';function k(a){var b=0;return function(){return b<a.length?{done:!1,value:a[b++]}:{done:!0}}}function l(a){var b=typeof Symbol!="undefined"&&Symbol.iterator&&a[Symbol.iterator];if(b)return b.call(a);if(typeof a.length=="number")return{next:k(a)};throw Error(String(a)+" is not an iterable or ArrayLike");}var m=typeof Object.defineProperties=="function"?Object.defineProperty:function(a,b,c){if(a==Array.prototype||a==Object.prototype)return a;a[b]=c.value;return a};
-function n(a){a=["object"==typeof globalThis&&globalThis,a,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var b=0;b<a.length;++b){var c=a[b];if(c&&c.Math==Math)return c}throw Error("Cannot find global object");}var p=n(this);function q(a,b){if(b)a:{var c=p;a=a.split(".");for(var d=0;d<a.length-1;d++){var e=a[d];if(!(e in c))break a;c=c[e]}a=a[a.length-1];d=c[a];b=b(d);b!=d&&b!=null&&m(c,a,{configurable:!0,writable:!0,value:b})}}
-q("Object.is",function(a){return a?a:function(b,c){return b===c?b!==0||1/b===1/c:b!==b&&c!==c}});q("Array.prototype.includes",function(a){return a?a:function(b,c){var d=this;d instanceof String&&(d=String(d));var e=d.length;c=c||0;for(c<0&&(c=Math.max(c+e,0));c<e;c++){var f=d[c];if(f===b||Object.is(f,b))return!0}return!1}});
-q("String.prototype.includes",function(a){return a?a:function(b,c){if(this==null)throw new TypeError("The 'this' value for String.prototype.includes must not be null or undefined");if(b instanceof RegExp)throw new TypeError("First argument to String.prototype.includes must not be a regular expression");return this.indexOf(b,c||0)!==-1}});function r(a,b,c){a("https://csp.withgoogle.com/csp/proto/"+encodeURIComponent(b),JSON.stringify(c))}function t(){var a;if((a=window.ppConfig)==null?0:a.disableAllReporting)return function(){};var b,c,d,e;return(e=(b=window)==null?void 0:(c=b.navigator)==null?void 0:(d=c.sendBeacon)==null?void 0:d.bind(navigator))!=null?e:u}function u(a,b){var c=new XMLHttpRequest;c.open("POST",a);c.send(b)}
-function v(){var a=(w=Object.prototype)==null?void 0:w.__lookupGetter__("__proto__"),b=x,c=y;return function(){var d=a.call(this),e,f,g,h;r(c,b,{type:"ACCESS_GET",origin:(f=window.location.origin)!=null?f:"unknown",report:{className:(g=d==null?void 0:(e=d.constructor)==null?void 0:e.name)!=null?g:"unknown",stackTrace:(h=Error().stack)!=null?h:"unknown"}});return d}}
-function z(){var a=(A=Object.prototype)==null?void 0:A.__lookupSetter__("__proto__"),b=x,c=y;return function(d){d=a.call(this,d);var e,f,g,h;r(c,b,{type:"ACCESS_SET",origin:(f=window.location.origin)!=null?f:"unknown",report:{className:(g=d==null?void 0:(e=d.constructor)==null?void 0:e.name)!=null?g:"unknown",stackTrace:(h=Error().stack)!=null?h:"unknown"}});return d}}function B(a,b){C(a.productName,b);setInterval(function(){C(a.productName,b)},a.periodicReportingRateMillis)}
-var D="constructor __defineGetter__ __defineSetter__ hasOwnProperty __lookupGetter__ __lookupSetter__ isPrototypeOf propertyIsEnumerable toString valueOf __proto__ toLocaleString x_ngfn_x".split(" "),E=D.concat,F=navigator.userAgent.match(/Firefox\/([0-9]+)\./),G=(!F||F.length<2?0:Number(F[1])<75)?["toSource"]:[],H;if(G instanceof Array)H=G;else{for(var I=l(G),J,K=[];!(J=I.next()).done;)K.push(J.value);H=K}var L=E.call(D,H),M=[];
-function C(a,b){for(var c=[],d=l(Object.getOwnPropertyNames(Object.prototype)),e=d.next();!e.done;e=d.next())e=e.value,L.includes(e)||M.includes(e)||c.push(e);e=Object.prototype;d=[];for(var f=0;f<c.length;f++){var g=c[f];d[f]={name:g,descriptor:Object.getOwnPropertyDescriptor(Object.prototype,g),type:typeof e[g]}}if(d.length!==0){c=l(d);for(e=c.next();!e.done;e=c.next())M.push(e.value.name);var h;r(b,a,{type:"SEAL",origin:(h=window.location.origin)!=null?h:"unknown",report:{blockers:d}})}};var N=Math.random(),O=t(),P=window.ppConfig;P&&(P.disableAllReporting||P.deleteIsEnforced&&P.sealIsEnforced||N<P.heartbeatRate&&r(O,P.productName,{origin:window.location.origin,type:"HEARTBEAT"}));var y=t(),Q=window.ppConfig;if(Q)if(Q.deleteIsEnforced)delete Object.prototype.__proto__;else if(!Q.disableAllReporting){var x=Q.productName;try{var w,A;Object.defineProperty(Object.prototype,"__proto__",{enumerable:!1,get:v(),set:z()})}catch(a){}}
-(function(){var a=t(),b=window.ppConfig;b&&(b.sealIsEnforced?Object.seal(Object.prototype):b.disableAllReporting||(document.readyState!=="loading"?B(b,a):document.addEventListener("DOMContentLoaded",function(){B(b,a)})))})();}).call(this);
-</script><script nonce="">var DOCS_timing={}; DOCS_timing['sl']=new Date().getTime();</script><script nonce="">function _DumpException(e) {throw e;}</script><script data-id="_gd" nonce="">window.WIZ_global_data = {"K1cgmc":"%.@.[null,null,null,[1,1,[1782180615,9738000],4],null,25]]","gnD3ee":"%.@.null,null,null,\"https://drive.google.com/viewer/main\"]","nQyAE":{}};</script>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MagicWorldMC | Home</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 </head>
+
 <body>
-  <!-- Google Sites embedded inhoud wordt hier geladen -->
-  <p>Website succesvol hersteld. De overige pagina-elementen worden via je gekoppelde bestanden ingeladen.</p>
+
+<div class="stars-bg"></div>
+
+<header class="navbar">
+
+    <div class="logo">
+        MagicWorldMC
+    </div>
+
+    <div class="menu-toggle" onclick="toggleMenu()">
+        ☰
+    </div>
+
+    <nav class="nav-links" id="menu">
+        <a href="index.html">Home</a>
+        <a href="bezoeken.html">Bezoeken</a>
+        <a href="ranks.html">Media Rank</a>
+        <a href="downloads.html">Downloads</a>
+        <a href="regels.html">Regels</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="vacatures.html">Vacatures</a>
+        <a href="team.html">Ons Team</a>
+        <a href="login.html">Staff Login</a>
+    </nav>
+
+</header>
+
+<section class="hero">
+
+    <h1>Welkom bij MagicWorldMC</h1>
+
+    <p>
+        Welkom op de officiële website van MagicWorldMC.
+        Ontdek ons magische attractiepark, bekijk het laatste nieuws,
+        vraag een Media Rank aan en blijf op de hoogte van alle ontwikkelingen.
+    </p>
+
+    <div class="hero-buttons">
+        <a class="btn" href="bezoeken.html">Bezoek het park</a>
+        <a class="btn" href="ranks.html">Media Rank</a>
+        <a class="btn" href="downloads.html">Downloads</a>
+    </div>
+
+</section>
+
+<section class="info">
+
+    <div class="card">
+        <h2>Over MagicWorldMC</h2>
+
+        <p>
+            MagicWorldMC is een Nederlandse Minecraft-server met een eigen
+            attractiepark, evenementen en een enthousiast staffteam.
+            We werken voortdurend aan nieuwe attracties, shows en uitbreidingen.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Nieuws</h2>
+
+        <p>
+            Houd de blogs in de gaten voor updates over nieuwe attracties,
+            evenementen en serverontwikkelingen.
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>Staff</h2>
+
+        <p>
+            Ben je lid van het staffteam? Log dan in via de Staff Login om
+            toegang te krijgen tot het staffdashboard.
+        </p>
+
+        <a class="btn" href="login.html">Staff Login</a>
+    </div>
+
+</section>
+
+<footer class="footer">
+
+    <p>
+        © 2026 MagicWorldMC. Alle rechten voorbehouden.
+    </p>
+
+</footer>
+
+<script src="script.js"></script>
+
 </body>
 </html>
